@@ -17,20 +17,27 @@ restart_cmd="${name}_restart"
 
 hw4_start()
 {
-   cd /home/Colten/musical-potato/app 
-}
+	cd /home/Colten/musical-potato/
+	poetry shell
+	cd api && poetry run uvicorn app:APP --reload --host 0.0.0.0
 
+}
 hw4_stop()
 {
     echo "Stopping hw4"
-    # 这里放置您的停止服务的命令
+    
+    if [ -f "/ver/run/hw4.pid" ]; then
+	    kill $(cat /var/run/hw4.pid)
+	    rm /var/run/hw4.pid
+    fi
 }
-
 hw4_restart()
 {
-    echo "Restarting hw4"
-    # 这里放置您的重启服务的命令
+    hw4_stop
+    hw4_start
 }
+
+load_rc_config $name
 
 run_rc_command "$1"
 
