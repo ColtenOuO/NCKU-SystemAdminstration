@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# PROVIDE: hw4
+# REQUIRE: networking
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="hw4"
+rcvar=${name}_enable
+
+load_rc_config $name
+
+start_cmd="${name}_start"
+stop_cmd="${name}_stop"
+restart_cmd="${name}_restart"
+
+hw4_start()
+{
+   cd /home/Colten/musical-potato/app 
+}
+
+hw4_stop()
+{
+    echo "Stopping hw4"
+    # 这里放置您的停止服务的命令
+}
+
+hw4_restart()
+{
+    echo "Restarting hw4"
+    # 这里放置您的重启服务的命令
+}
+
+run_rc_command "$1"
+
