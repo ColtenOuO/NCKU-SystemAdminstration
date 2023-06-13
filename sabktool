@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+
+def help_message():
+    print("Usage:")
+    print("\tcreate <snapshot-name>")
+    print("\tremove <snapshot-name> | all")
+    print("\tlist")
+    print("\troll <snapshot-name>")
+    print("\tlogrotate")
+def logrotate():
+    os.system("logrotate /etc/logrotate.d/fakelog/fakelog.conf")
+def zfs_create(name):
+    os.system(f"zfs snapshot sa_pool/data@{name}")
+def zfs_remove(name):
+    if name == "all":
+        os.system("zfs destroy -r sa_pool/data@%") # % 刪除所有 @ 指定快照的名稱
+    else:
+        os.system(f"zfs destroy sa_pool/data@{name}")
+def zfs_list():
+    os.system("zfs list -t snapshot | awk '{print $1}'")
+def zfs_rollback(name):
+    os.system(f"zfs rollback -r sa_pool/data@{name}")
+
+if __name__ == "__main__":
+    ouo = sys.argv[1]
+    if ouo == "help":
+        help_message()
+    if ouo == "logrotate":
+        logrotate()
+    if ouo == "create":
+        zfs_create(sys.argv[2])
+    if ouo == "remove":
+        zfs_remove(sys.argv[2])
+    if ouo == "list":
+        zfs_list()
+    if ouo == "roll":
+        zfs_rollback(sys.argv[2])
