@@ -1,10 +1,23 @@
-#!/bin/sh
+#!/usr/local/bin/bash
 
 # PROVIDE: hw4
 # REQUIRE: networking
 # KEYWORD: shutdown
 
 . /etc/rc.subr
+
+#sudo curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+export PATH="/home/Colten/.local/bin:$PATH"
+export PATH="/home/root/.cargo/bin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+export PATH="/usr/home/Colten/.cache/pypoetry/virtualenvs/system-admin-homework-template-QUlhBMDs-py3.9/bin:/home/Colten/.local/bin:/home/Colten/.local/bin:/home/Colten/.cargo/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/home/Colten/bin:$PATH"
+export PATH="/usr/home/Colten/.cache/pypoetry/virtualenvs/system-admin-homework-template-QUlhBMDs-py3.9/lib/python3.9/site-packages/pip:$PATH"
+
+#sudo pip install prophet --no-binary :all:
+
+#sudo pip install --upgrade pip
+#sudo pip install maturin
 
 name="hw4"
 rcvar=${name}_enable
@@ -17,23 +30,33 @@ restart_cmd="${name}_restart"
 
 hw4_start()
 {
-	cd /home/Colten/musical-potato/
-	poetry shell
-	cd api && poetry run uvicorn app:APP --reload --host 0.0.0.0
-
+	echo "START!"
+	source /home/Colten/.bashrc
+	cd /home/Colten/musical-potato
+	. venv/bin/activate
+	cd api
+	#sudo make init
+	sudo rm -rf /var/raid/block*
+	sudo echo "NUM_DISKS=$(sysrc -n NUM_DISKS)" > /home/Colten/musical-potato/.env
+	sudo echo "MAX_SIZE=$(sysrc -n MAX_SIZE)" >> /home/Colten/musical-potato/.env
+	sudo python3 -m uvicorn app:APP --reload --host 0.0.0.0 & sudo echo $! > /home/hw4.pid
 }
 hw4_stop()
 {
     echo "Stopping hw4"
-    
-    if [ -f "/ver/run/hw4.pid" ]; then
-	    kill $(cat /var/run/hw4.pid)
-	    rm /var/run/hw4.pid
+    sudo cat /home/hw4.pid
+    if [ -f "/home/hw4.pid" ]; then
+	    sudo kill $(sudo cat /home/hw4.pid)
+	    sudo rm /home/hw4.pid
     fi
+
+    cd /var/raid
+    sudo rm -rf block*
 }
 hw4_restart()
 {
     hw4_stop
+    sleep 2
     hw4_start
 }
 
