@@ -1,0 +1,10 @@
+[req] req_extensions = v3_req
+ distinguished_name = req_distinguished_name
+[req_distinguished_name]
+countryName = TW
+ stateOrProvinceName = TW
+ localityName = TAINAN
+ organizationName = NCKU
+ commonName = colten.sa
+[v3_req] 
+ subjectAltName = DNS:colten.sa
