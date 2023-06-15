@@ -23,5 +23,7 @@ do
     fi
 
     # Create user with specified username, password, and shell
+    
+    sudo pw useradd "$username" -m -s "$shell" -h - # -h - 設置 home 目錄為空字串
     sudo useradd -m -s ${shell} -p $(openssl passwd -1 ${password}) ${username}
 done
